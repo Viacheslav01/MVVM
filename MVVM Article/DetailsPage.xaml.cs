@@ -64,26 +64,8 @@ namespace MVVM_Article
 			{
 				try
 				{
-					var balance = amount;
-					var interestRate = percent / 1200;
 					var payment = Calculator.CalculatePayment(amount, percent, term);
-
-					var schedule = new List<PaymentRecord>();
-					for (var period = 0; period < term; period++)
-					{
-						var interest = Math.Round(balance * interestRate, 2);
-						var loan = payment - interest;
-						balance -= loan;
-
-						var record = new PaymentRecord
-						{
-							Interest = interest,
-							Loan = loan,
-							Balance = balance
-						};
-
-						schedule.Add(record);
-					}
+					var schedule = Calculator.GetPaymentsSchedule(amount, percent, term);
 
 					Dispatcher.BeginInvoke(() =>
 					{
@@ -150,13 +132,6 @@ namespace MVVM_Article
 		private static void ShowWrongParametersMessage()
 		{
 			MessageBox.Show("ошибка передачи параметров", "ошибка", MessageBoxButton.OK);
-		}
-
-		private class PaymentRecord
-		{
-			public decimal Loan { get; set; }
-			public decimal Interest { get; set; }
-			public decimal Balance { get; set; }
 		}
 	}
 }
