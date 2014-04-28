@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MVVM_Article
 {
-	internal class Calculator
+	internal static class Calculator
 	{
 		public static decimal CalculatePayment(decimal amount, decimal percent, int term)
 		{

@@ -6,6 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="clr-namespace:MVVM_Article.Converters"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -13,6 +14,10 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
+	<phone:PhoneApplicationPage.Resources>
+		<converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+	</phone:PhoneApplicationPage.Resources>
+	
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -32,32 +37,31 @@
 					</StackPanel.Resources>
 
 					<TextBlock Text="Сумма кредита" />
-					<TextBox x:Name="viewAmount" InputScope="Number" />
+					<TextBox Text="{Binding Amount, Mode=TwoWay}" InputScope="Number" />
 					<TextBlock Text="Процентная ставка"/>
-					<TextBox x:Name="viewPercent" InputScope="Number" />
+					<TextBox Text="{Binding Percent, Mode=TwoWay}" InputScope="Number" />
 					<TextBlock Text="Срок кредита" />
-					<TextBox x:Name="viewTerm" InputScope="Number"/>
-					<Button x:Name="viewCalculate" Content="расчитать" Click="CalculateClick" />
+					<TextBox Text="{Binding Term, Mode=TwoWay}" InputScope="Number"/>
+					<Button Content="расчитать" Command="{Binding CalculateCommand}" />
 
-					<Border x:Name="viewCalculationPanel" BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="{StaticResource PhoneBorderThickness}" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="Collapsed">
+					<Border BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="{StaticResource PhoneBorderThickness}" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="{Binding IsCalculated, Converter={StaticResource BoolToVisibilityConverter}}">
 						<StackPanel>
 							<StackPanel Orientation="Horizontal">
 								<TextBlock Text="Платеж:" Style="{StaticResource PhoneTextNormalStyle}"/>
-								<TextBlock x:Name="viewPayment" Style="{StaticResource PhoneTextNormalStyle}"/>
+								<TextBlock Text="{Binding Payment}" Style="{StaticResource PhoneTextNormalStyle}"/>
 							</StackPanel>
 							<StackPanel Orientation="Horizontal">
 								<TextBlock Text="Выплаты:" Style="{StaticResource PhoneTextNormalStyle}"/>
-								<TextBlock x:Name="viewTotalPayment" Style="{StaticResource PhoneTextNormalStyle}" />
+								<TextBlock Text="{Binding TotalAmount}" Style="{StaticResource PhoneTextNormalStyle}" />
 							</StackPanel>
-							<Button Content="подробно" Click="DetailsClick" />
+							<Button Content="подробно" Command="{Binding DetailsCommand}" />
 						</StackPanel>
 					</Border>
 				</StackPanel>
 			</ScrollViewer>
-
 		</Grid>
 
-		<Grid x:Name="viewProgressPanel" Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource OpacityBackgroundBrush}" Visibility="Collapsed">
+		<Grid x:Name="viewProgressPanel" Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource OpacityBackgroundBrush}" Visibility="{Binding IsCalculating, Converter={StaticResource BoolToVisibilityConverter}}">
 			<ProgressBar Opacity="1" IsIndeterminate="True" />
 		</Grid>
 	</Grid>
